@@ -1,0 +1,18 @@
+name = "svel-ai"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "flight-monitor-db"
+database_id = "e14abc41-b0c4-4c97-932a-6da31d36fe33"
+
+# Sunday 08:00 UTC -> weekly report. Every 6h -> scraper health sweep.
+[triggers]
+crons = ["0 8 * * SUN", "0 */6 * * *"]
+
+# ALERT_EMAIL and NTFY_TOPIC are Cloudflare *secrets*, not vars — this file is
+# committed to a public repo. Set them with `wrangler secret put <NAME>`.
+[vars]
+MAIL_FROM = "svel.ai <onboarding@resend.dev>"

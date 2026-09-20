@@ -1,0 +1,8 @@
+node_modules/
+.wrangler/
+.dev.vars
+*.log
+__pycache__/
+.venv/
+.secrets-scratch*
+PRIVATE-NOTES.md

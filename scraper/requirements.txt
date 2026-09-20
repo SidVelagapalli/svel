@@ -1,0 +1,4 @@
+fast-flights==3.1.0
+# fast-flights 3.1.0 imports typing_extensions but does not declare it.
+typing_extensions>=4.12
+requests>=2.32
