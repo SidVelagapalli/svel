@@ -1,6 +1,6 @@
 # svel.ai — build status
 
-Last updated: 2026-09-19.
+Last updated: 2026-09-20.
 
 Flight-price agent: polls Google Flights every 30 minutes, keeps a price history
 in D1, and alerts by email + phone push + Telegram when something worth knowing
@@ -24,20 +24,27 @@ recreate both.
 - [x] Telegram webhook registered, reporting no errors
 - [x] Test alert email sent through Resend (HTTP 200)
 - [x] Git remote configured, branch `main`
+- [x] `INGEST_TOKEN` rotated 2026-09-20 (see "Credential incident" below)
+- [x] Local history squashed to one commit so `NTFY_TOPIC` is not published
+- [x] `.gitignore` tightened to `.secrets-scratch*`
 
 ## Remaining
 
-1. **Push to GitHub.** Run it yourself — the assistant is blocked from pushing:
+1. **Push to GitHub.** No credential is stored on this machine yet, so log in
+   first, in a real terminal (it needs a TTY):
    ```bash
-   cd ~/svel && git push -u origin main
+   gh auth login     # GitHub.com / HTTPS / Yes to "Authenticate Git" / browser
+   cd ~/svel && git push --force -u origin main
    ```
-   GitHub needs a Personal Access Token with `repo` scope, not an account
-   password. Settings -> Developer settings -> Personal access tokens (classic).
+   `--force` is required: the remote's history is unrelated to the local one, so
+   a plain push is rejected as non-fast-forward. The push replaces the remote's
+   two commits and deletes its `main.yml`.
 
 2. **Add two GitHub Actions secrets** (repo Settings -> Secrets and variables
    -> Actions). Values are in `PRIVATE-NOTES.md` and `.secrets-scratch`:
    - `WORKER_URL`
-   - `INGEST_TOKEN`
+   - `INGEST_TOKEN` — use the **rotated** value. The old one is dead; pasting
+     it makes every poll 401.
 
 3. **Enable Actions**, then run the `svel poll` workflow manually once. It will
    say "No active routes" until step 4 — that is still a successful test,
@@ -46,6 +53,17 @@ recreate both.
 4. **Add routes** (nothing is monitored until this happens). Either text the
    bot `/add JFK to Lisbon March 3 to March 10 under 500`, or insert directly
    with the SQL below.
+
+## Credential incident (2026-09-20)
+
+The GitHub repo is public, and its `.github/workflows/main.yml` contained the
+live `INGEST_TOKEN` hardcoded in a curl command. The token was rotated: a new
+one was uploaded with `wrangler secret put` and written to `.secrets-scratch`.
+Verified against `GET /routes` — old token 401, new token 200.
+
+The leaked value is dead, so the orphaned commit `c37459e` that still holds it
+needs no further action. The matching GitHub Actions secret must be created
+with the new value.
 
 ## Unverified
 
