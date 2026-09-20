@@ -50,9 +50,7 @@ recreate both.
    say "No active routes" until step 4 — that is still a successful test,
    because it proves GitHub can authenticate to the Worker.
 
-4. **Add routes** (nothing is monitored until this happens). Either text the
-   bot `/add JFK to Lisbon March 3 to March 10 under 500`, or insert directly
-   with the SQL below.
+4. ~~**Add routes.**~~ Done 2026-09-20 — see "Routes" below.
 
 ## Credential incident (2026-09-20)
 
@@ -112,11 +110,20 @@ curl -X POST "$(grep '^WORKER_URL=' ~/svel/.secrets-scratch | cut -d= -f2-)/repo
   -H "Authorization: Bearer $(grep '^INGEST_TOKEN=' ~/svel/.secrets-scratch | cut -d= -f2-)"
 ```
 
-## Open question
+## Routes
 
-**Which routes to track has never been decided.** Nothing is monitored until
-routes exist. Each one needs an origin, a destination, dates, and optionally a
-target price.
+Decided 2026-09-20. Route 1 is live in D1 and returned by `GET /routes`:
+
+| id | label | route | depart | return | target |
+|----|-------|-------|--------|--------|--------|
+| 1  | NYC -> Lisbon | JFK -> LIS | 2027-03-03 | 2027-03-10 | USD 500 |
+
+`drop_pct` 7.0, economy, 1 adult, no stop limit. Add more with the INSERT
+above or by texting the bot `/add ...`.
+
+Note: no prices have been collected yet, because the poller is not running
+until the GitHub Actions setup is finished. Verdicts stay weak for the first
+few days on a new route regardless.
 
 ## Known risks
 
