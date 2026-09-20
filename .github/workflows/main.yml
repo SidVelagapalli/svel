@@ -11,5 +11,5 @@ jobs:
     steps:
       - name: Trigger Svel Monitor
         run: |
-          curl -X POST "https://svel-ai.empty-dawn-0bec.workers.dev" \
+          curl -X POST "https://svel-ai.svel.workers.dev" \
           -H "Authorization: Bearer 0e24bbb2efd1f94cb31d324c1271ebbee416ceeede2e1d75ebbce911d3f39864"
